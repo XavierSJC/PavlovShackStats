@@ -16,16 +16,26 @@ namespace WebApplication1.Services
             _dbContext = dbContext;
         }
 
-        public Player GetPlayersById(int Id)
+        public object GetPlayersStats()
         {
-            throw new NotImplementedException();
+            var PlayerStats = _dbContext.MatchersPlayerStats
+                .GroupBy(p => p.Player)
+                .Select(g => new
+                {
+                    Player = g.Select(p => p.Player.Name),
+                    kill = g.Sum(p => p.Kill),
+                    Death = g.Sum(p => p.Death),
+                    Assist = g.Sum(p => p.Asssistant)
+                });
+
+            return PlayerStats;
         }
 
         public void InsertNewStats(PavlovStats Stats, string Filename)
         {
             if (MatchAlreadyExist(Filename))
             {
-                throw new Exception("This match is registered in DB already ");
+                throw new Exception("This match already exist in DB");
             }
             var match = new PavlovShackStats.Models.Match();            
             match.Map = GetMap(Stats.MapLabel);
@@ -39,11 +49,12 @@ namespace WebApplication1.Services
             match.MatchPlayerStats = new Collection<MatchPlayerStats>();
             foreach (var player in Stats.AllStats)
             {
-                //todo if null player, does not register stats
-                var matchPlayerStats = new MatchPlayerStats();
-                matchPlayerStats.Player = GetPlayer(player.PlayerName);
-                matchPlayerStats.TeamId = player.TeamId;
-                foreach(var stats in player.Stats)
+                var matchPlayerStats = new MatchPlayerStats
+                {
+                    Player = GetPlayer(player.PlayerName),
+                    TeamId = player.TeamId
+                };
+                foreach (var stats in player.Stats)
                 {
                     switch (stats.StatType)
                     {

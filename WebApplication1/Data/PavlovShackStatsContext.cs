@@ -10,8 +10,8 @@ namespace PavlovShackStats.Data
         {
         }
 
-        public DbSet<Player> Players { get; set; } = null!;
-        public DbSet<Map> Maps { get; set; } = null!;
+        public DbSet<Player> Players { get; set; }
+        public DbSet<Map> Maps { get; set; }
         public DbSet<GameMode> GameModes { get; set; }
         public DbSet<Match> Matchers { get; set; }
         public DbSet<MatchPlayerStats> MatchersPlayerStats { get; set; }

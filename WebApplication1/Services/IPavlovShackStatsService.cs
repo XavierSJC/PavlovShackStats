@@ -6,7 +6,6 @@ namespace WebApplication1.Services
     public interface IPavlovShackStatsService
     {
         void InsertNewStats(PavlovStats Stats, string Filename);
-        Player GetPlayersById(int Id);
-
+        object GetPlayersStats();
     }
 }

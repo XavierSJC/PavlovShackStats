@@ -28,7 +28,21 @@ namespace WebApplication1.Controllers
                 return BadRequest(ex.Message);
             }
 
-            return Ok();
+            return Created("/", null);
+        }
+
+        [HttpGet("PlayersStats")]
+        public ActionResult GetPlayerStats() 
+        {
+
+            try
+            {
+                return Ok(_PavlovShackStats.GetPlayersStats());
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }
