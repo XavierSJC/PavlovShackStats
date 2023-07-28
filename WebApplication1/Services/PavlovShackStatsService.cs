@@ -1,8 +1,6 @@
 ﻿using PavlovShackStats.Data;
 using PavlovShackStats.Models;
 using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using WebApplication1.Models;
 
 namespace WebApplication1.Services
@@ -18,17 +16,23 @@ namespace WebApplication1.Services
 
         public object GetPlayersStats()
         {
-            var PlayerStats = _dbContext.MatchersPlayerStats
-                .GroupBy(p => p.Player)
-                .Select(g => new
+            var query =
+                from playerStats in _dbContext.MatchersPlayerStats
+                join player in _dbContext.Players on playerStats.PlayerId equals player.PlayerId
+                group playerStats by new { player.Name } into g
+                select new
                 {
-                    Player = g.Select(p => p.Player.Name),
-                    kill = g.Sum(p => p.Kill),
-                    Death = g.Sum(p => p.Death),
-                    Assist = g.Sum(p => p.Asssistant)
-                });
+                    PlayerName = g.Key.Name,
+                    Kills = g.Sum(_ => _.Kill),
+                    Death = g.Sum(_ => _.Death),
+                    Assist = g.Sum(_ => _.Asssistant),
+                    HeadShot = g.Sum(_ => _.Headshot),
+                    BombDefused = g.Sum(_ => _.BombDefused),
+                    BombPlanted = g.Sum(_ => _.BombPlanted),
+                    TeamKill = g.Sum(_ => _.TeamKill)
+                };
 
-            return PlayerStats;
+            return query;
         }
 
         public void InsertNewStats(PavlovStats Stats, string Filename)
@@ -120,6 +124,199 @@ namespace WebApplication1.Services
                 return true;
             }
             return false;
+        }
+
+        public object GetPlayerStats(string playerName)
+        {
+            var query =
+                from playerStats in _dbContext.MatchersPlayerStats
+                join player in _dbContext.Players on playerStats.PlayerId equals player.PlayerId
+                where player.Name == playerName
+                group playerStats by new { player.Name } into g
+                select new
+                {
+                    PlayerName = g.Key.Name,
+                    Kills = g.Sum(_ => _.Kill),
+                    Death = g.Sum(_ => _.Death),
+                    Assist = g.Sum(_ => _.Asssistant),
+                    HeadShot = g.Sum(_ => _.Headshot),
+                    BombDefused = g.Sum(_ => _.BombDefused),
+                    BombPlanted = g.Sum(_ => _.BombPlanted),
+                    TeamKill = g.Sum(_ => _.TeamKill)
+                };
+
+            return query;
+        }
+
+        public object GetPlayerStats(int playerId)
+        {
+            var query =
+                from playerStats in _dbContext.MatchersPlayerStats
+                join player in _dbContext.Players on playerStats.PlayerId equals player.PlayerId
+                where player.PlayerId == playerId
+                group playerStats by new { player.Name } into g
+                select new
+                {
+                    PlayerName = g.Key.Name,
+                    Kills = g.Sum(_ => _.Kill),
+                    Death = g.Sum(_ => _.Death),
+                    Assist = g.Sum(_ => _.Asssistant),
+                    HeadShot = g.Sum(_ => _.Headshot),
+                    BombDefused = g.Sum(_ => _.BombDefused),
+                    BombPlanted = g.Sum(_ => _.BombPlanted),
+                    TeamKill = g.Sum(_ => _.TeamKill)
+                };
+
+            return query;
+        }
+
+        public object GetPlayerMatches(string playerName)
+        {
+            var query =
+                from match in _dbContext.Matchers
+                join map in _dbContext.Maps on match.MapId equals map.MapId
+                join gameMode in _dbContext.GameModes on match.GameModeId equals gameMode.GameModeId
+                join playerStats in _dbContext.MatchersPlayerStats on match.MatchId equals playerStats.MatchId
+                join player in _dbContext.Players on playerStats.PlayerId equals player.PlayerId
+                where player.Name == playerName
+                select new
+                {
+                    match.MatchId,
+                    PlayerName = player.Name,
+                    MapName = map.Name,
+                    GameMode = gameMode.Name,
+                    match.Team0Score,
+                    match.Team1Score,
+                    playerStats.TeamId,
+                    PlayersMatch = match.PlayerCount,
+                    match.FinishedTime,
+                };
+
+            return query;
+        }
+
+        public object GetPlayerMatches(int playerId)
+        {
+            var query =
+                from match in _dbContext.Matchers
+                join map in _dbContext.Maps on match.MapId equals map.MapId
+                join gameMode in _dbContext.GameModes on match.GameModeId equals gameMode.GameModeId
+                join playerStats in _dbContext.MatchersPlayerStats on match.MatchId equals playerStats.MatchId
+                join player in _dbContext.Players on playerStats.PlayerId equals player.PlayerId
+                where player.PlayerId == playerId
+                select new
+                {
+                    match.MatchId,
+                    PlayerName = player.Name,
+                    MapName = map.Name,
+                    GameMode = gameMode.Name,
+                    match.Team0Score,
+                    match.Team1Score,
+                    playerStats.TeamId,
+                    PlayersMatch = match.PlayerCount,
+                    match.FinishedTime,
+                };
+
+            return query;
+        }
+
+        public IQueryable<object> GetMatches()
+        {
+            var query =
+                from match in _dbContext.Matchers
+                join map in _dbContext.Maps on match.MapId equals map.MapId
+                join gameMode in _dbContext.GameModes on match.GameModeId equals gameMode.GameModeId
+                select new
+                {
+                    match.MatchId,
+                    MapName = map.Name,
+                    GameMode = gameMode.Name,
+                    match.Team0Score,
+                    match.Team1Score,
+                    PlayersMatch = match.PlayerCount,
+                    match.FinishedTime,
+                };
+
+            return query;
+        }
+
+        public object ListPlayers()
+        {
+            return from player in _dbContext.Players
+                   select new {  player.PlayerId, player.Name };
+        }
+
+        public object GetMatch(int matchId)
+        {
+            var query =
+                from match in _dbContext.Matchers
+                join map in _dbContext.Maps on match.MapId equals map.MapId
+                join gameMode in _dbContext.GameModes on match.GameModeId equals gameMode.GameModeId
+                where match.MatchId == matchId
+                select new
+                {
+                    match.MatchId,
+                    MapName = map.Name,
+                    GameMode = gameMode.Name,
+                    match.Team0Score,
+                    match.Team1Score,
+                    PlayersMatch = match.PlayerCount,
+                    match.FinishedTime,
+                };
+
+            return query;
+        }
+
+        public object GetMatch(DateTime matchDate)
+        {
+            var query =
+                from match in _dbContext.Matchers
+                join map in _dbContext.Maps on match.MapId equals map.MapId
+                join gameMode in _dbContext.GameModes on match.GameModeId equals gameMode.GameModeId
+                where match.FinishedTime == matchDate
+                select new
+                {
+                    match.MatchId,
+                    MapName = map.Name,
+                    GameMode = gameMode.Name,
+                    match.Team0Score,
+                    match.Team1Score,
+                    PlayersMatch = match.PlayerCount,
+                    match.FinishedTime,
+                };
+
+            return query;
+        }
+
+        public object GetMatchDetails(int matchId)
+        {
+            return new
+            {
+                Team0 = GetTeamMatchDetails(matchId, 0),
+                Team1 = GetTeamMatchDetails(matchId, 1)
+            };
+        }
+
+        private object GetTeamMatchDetails(int matchId, int teamId)
+        {
+            var query =
+                from playerStats in _dbContext.MatchersPlayerStats
+                join player in _dbContext.Players on playerStats.PlayerId equals player.PlayerId
+                where playerStats.TeamId == teamId
+                   && playerStats.MatchId == matchId
+                select new
+                {
+                    player.Name,
+                    playerStats.Kill,
+                    playerStats.Death,
+                    playerStats.Asssistant,
+                    playerStats.Headshot,
+                    playerStats.BombDefused,
+                    playerStats.BombPlanted,
+                    playerStats.TeamKill    
+                };
+
+            return query.ToList();
         }
     }
 }
