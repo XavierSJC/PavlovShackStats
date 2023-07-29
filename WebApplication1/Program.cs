@@ -6,6 +6,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddTransient<IPavlovShackStatsService, PavlovShackStatsService>();
 
+builder.Services.AddCors(opt =>
+{
+    opt.AddDefaultPolicy(
+        builder =>
+        {
+            builder.AllowAnyOrigin();
+        });
+});
+
 builder.Services.AddControllers();
 
 // Add services to the container.
@@ -31,6 +40,8 @@ else
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 
