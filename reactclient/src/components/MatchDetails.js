@@ -1,4 +1,11 @@
 import React, { Component } from 'react';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 export default class MatchDetailsTable extends Component {
   static displayName = MatchDetailsTable.name;
@@ -13,38 +20,42 @@ export default class MatchDetailsTable extends Component {
   }
 
   static renderMatchDetails(nameTeam, matchDetails) {
+    let colorHeader = nameTeam === 'Time 1' ? '#ee605d' : '#008fd7'
     return (
-      <table className="table table-striped" aria-labelledby="tableLabel">
-        <thead>
-          <tr>
-            <th colSpan="8">{nameTeam}</th>
-          </tr>
-          <tr>
-            <th>Jogador</th>
-            <th>Kills</th>
-            <th>Deaths</th>
-            <th>Assists</th>
-            <th>HeadShots</th>
-            <th>Bombas Desarmadas</th>
-            <th>Bombas Plantadas</th>
-            <th>Fogo amigo</th>
-          </tr>
-        </thead>
-        <tbody>
-          {matchDetails.map(match =>
-            <tr key={match.name}>
-              <td>{match.name}</td>
-              <td>{match.kill}</td>
-              <td>{match.death}</td>
-              <td>{match.asssistant}</td>
-              <td>{match.headshot}</td>
-              <td>{match.bombDefused}</td>
-              <td>{match.bombPlanted}</td>
-              <td>{match.teamKill}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <TableContainer component={Paper}>
+        <Table aria-label="Estatistica dos jogadores em um time">
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ backgroundColor: colorHeader }}
+                colSpan="8">{nameTeam}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Jogador</TableCell>
+              <TableCell>Kills</TableCell>
+              <TableCell>Deaths</TableCell>
+              <TableCell>Assists</TableCell>
+              <TableCell>HeadShots</TableCell>
+              <TableCell>Bombas Desarmadas</TableCell>
+              <TableCell>Bombas Plantadas</TableCell>
+              <TableCell>Fogo amigo</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {matchDetails.map(match =>
+              <TableRow key={match.name}>
+                <TableCell>{match.name}</TableCell>
+                <TableCell align="right">{match.kill}</TableCell>
+                <TableCell align="right">{match.death}</TableCell>
+                <TableCell align="right">{match.asssistant}</TableCell>
+                <TableCell align="right">{match.headshot}</TableCell>
+                <TableCell align="right">{match.bombDefused}</TableCell>
+                <TableCell align="right">{match.bombPlanted}</TableCell>
+                <TableCell align="right">{match.teamKill}</TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     )
   }
 
@@ -65,7 +76,7 @@ export default class MatchDetailsTable extends Component {
   }
 
   async populateMatchDetails() {
-    const response = await fetch('https://localhost:32768/api/PavlovShackStats/TeamsMatch?matchId='+this.props.matchId);
+    const response = await fetch('https://localhost:32768/api/PavlovShackStats/TeamsMatch?matchId=' + this.props.matchId);
     const data = await response.json();
     this.setState({ matchDetails: data, loading: false });
   }

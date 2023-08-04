@@ -5,6 +5,7 @@ export default function Matches() {
   return (
     <div>
       <h1>Partidas</h1>
+      <br />
       <MatchesTable />
     </div>
   );

@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
 import MatchDetails from '../components/MatchDetails'
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import IconButton from '@mui/material/IconButton';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 export default class MatchTable extends Component {
   static displayName = MatchTable.name;
@@ -25,41 +35,46 @@ export default class MatchTable extends Component {
 
   renderMatches(matches, expandedMatch) {
     return (
-      <table className="table table-striped" aria-labelledby="tableLabel">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Mapa</th>
-            <th>Modo</th>
-            <th>Placar time 1</th>
-            <th>Placar time 2</th>
-            <th>Total de Jogadores</th>
-            <th>Data e hora</th>
-          </tr>
-        </thead>
-        <tbody>
-          {matches.map((match, index) =>
-            <>
-              <tr key={match.matchId}>
-                <td onClick={() => this.SetExpandedMatch(index)}>
-                  <button>
-                    {
-                      expandedMatch[index] ? '-' : '+'
-                    }
-                  </button>
-                </td>
-                <td>{match.mapName}</td>
-                <td>{match.gameMode}</td>
-                <td>{match.team0Score}</td>
-                <td>{match.team1Score}</td>
-                <td>{match.playersMatch}</td>
-                <td>{match.finishedTime}</td>
-              </tr>
-              {this.renderTeamsMatch(index, match.matchId)}
-            </>
-          )}
-        </tbody>
-      </table>
+      <TableContainer component={Paper}>
+        <Table stripedRows aria-labelledby="tableLabel">
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>Mapa</TableCell>
+              <TableCell>Modo</TableCell>
+              <TableCell>Placar time 1</TableCell>
+              <TableCell>Placar time 2</TableCell>
+              <TableCell>Total de Jogadores</TableCell>
+              <TableCell>Data e hora</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {matches.map((match, index) =>
+              <>
+                <TableRow key={match.matchId}>
+                  <TableCell>
+                    <IconButton
+                      aria-label="expand row"
+                      size="small"
+                      onClick={() => this.SetExpandedMatch(index)}>
+                      {
+                        expandedMatch[index] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />
+                      }
+                    </IconButton>
+                  </TableCell>
+                  <TableCell>{match.mapName}</TableCell>
+                  <TableCell>{match.gameMode}</TableCell>
+                  <TableCell>{match.team0Score}</TableCell>
+                  <TableCell>{match.team1Score}</TableCell>
+                  <TableCell>{match.playersMatch}</TableCell>
+                  <TableCell>{this.convertTimeZone(match.finishedTime)}</TableCell>
+                </TableRow>
+                {this.renderTeamsMatch(index, match.matchId)}
+              </>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     )
   }
 
@@ -77,7 +92,7 @@ export default class MatchTable extends Component {
   }
 
   async populateMatchData() {
-    const response = await fetch('https://localhost:32768/api/PavlovShackStats/GetMatches');
+    const response = await fetch('https://localhost:32768/api/PavlovShackStats/GetMatches?count=50');
     const data = await response.json();
     this.setState({ matches: data, loading: false });
     this.setState({ expandedMatch: Array(data.lenght).fill(false) })
@@ -88,11 +103,18 @@ export default class MatchTable extends Component {
       ? <MatchDetails matchId={matchId} />
       : <></>
     return (
-      <tr>
-        <td colSpan="7">
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           {showTable}
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
     )
+  }
+
+  convertTimeZone(strDateTime) {
+    let dateTime = new Date(strDateTime);
+    dateTime.setHours(dateTime.getHours() - 3);
+
+    return dateTime.toLocaleString("UTC", "pt-BR");
   }
 }
