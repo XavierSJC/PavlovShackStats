@@ -226,6 +226,7 @@ namespace WebApplication1.Services
                 from match in _dbContext.Matchers
                 join map in _dbContext.Maps on match.MapId equals map.MapId
                 join gameMode in _dbContext.GameModes on match.GameModeId equals gameMode.GameModeId
+                orderby match.FinishedTime descending
                 select new
                 {
                     match.MatchId,
