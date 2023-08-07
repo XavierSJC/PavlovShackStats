@@ -18,7 +18,7 @@ export default function Home() {
         <p>Veja aqui como foi seu rendimento comparado a outros jogadores</p>
       </Typography>
       <br />
-
+      
       <List sx={{
         listStyleType: 'disc',
         pl: 3,

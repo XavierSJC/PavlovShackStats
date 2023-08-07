@@ -1,12 +1,15 @@
 import React from 'react';
 import MatchesTable from '../components/MatchTable'
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 export default function Matches() {
   return (
-    <div>
-      <h1>Partidas</h1>
-      <br />
+    <Box>
+      <Typography variant='h3' paragraph="true">
+        Partidas
+      </Typography>
       <MatchesTable />
-    </div>
+    </Box>
   );
 }

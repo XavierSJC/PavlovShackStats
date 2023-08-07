@@ -9,7 +9,14 @@ const Layout = ({ children }) => {
         <Box>
             <header>
                 <nav>
-                    <Stack direction="row" spacing={2}>
+                    <Stack className='test' direction="row" spacing={2}
+                        sx={
+                            {
+                                position: 'absolute',
+                                right: 0,
+                                marginRight: '10px',
+                                top: '80px'
+                            }}>
                         <item>
                             <Link href='/' underline="hover">Pagina inicial</Link>
                         </item>
