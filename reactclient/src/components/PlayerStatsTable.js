@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Constants from '../utilities/Constants';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -70,8 +71,17 @@ export default class PlayerStatsTable extends Component {
   }
 
   async populatePlayersStatsData() {
-    const response = await fetch('https://localhost:32768/api/PavlovShackStats/PlayersStats');
-    const data = await response.json();
-    this.setState({ playersStats: data, loading: false });
+    await fetch(Constants.API_URL_GET_PLAYERS_STATS)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((json) => {
+        this.setState({ playersStats: json, loading: false });
+      })
+      .catch((error) => {
+        console.log("Error to fetch API server '", Constants.API_URL_GET_MATCH_DETAILS, "': ", error);
+      });
   }
 }
