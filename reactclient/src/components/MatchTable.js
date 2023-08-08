@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MatchDetails from '../components/MatchDetails'
+import Constants from '../utilities/Constants';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -92,10 +93,19 @@ export default class MatchTable extends Component {
   }
 
   async populateMatchData() {
-    const response = await fetch('https://localhost:32768/api/PavlovShackStats/GetMatches?count=50');
-    const data = await response.json();
-    this.setState({ matches: data, loading: false });
-    this.setState({ expandedMatch: Array(data.lenght).fill(false) })
+    await fetch(Constants.API_URL_GET_MATCHES + '?count=50')
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((json) => {
+        this.setState({ matches: json, loading: false });
+        this.setState({ expandedMatch: Array(json.lenght).fill(false) });
+      })
+      .catch((error) => {
+        console.log("Error to fetch API server '", Constants.API_URL_GET_MATCH_DETAILS, "': ", error);
+      });
   }
 
   renderTeamsMatch(index, matchId) {
