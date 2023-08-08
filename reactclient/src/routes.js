@@ -5,15 +5,19 @@ import PlayerStats from "./pages/PlayerStats"
 const AppRoutes = [
   {
     index: true,
-    element: <Home />
+    path: '/',
+    element: <Home />,
+    title: 'Página inicial'
   },
   {
     path: '/matches',
-    element: <Matches />
+    element: <Matches />,
+    title: 'Últimas Partidas'
   },
   {
     path: '/playerstats',
-    element: <PlayerStats />
+    element: <PlayerStats />,
+    title: 'Jogadores' 
   }
 ];
 

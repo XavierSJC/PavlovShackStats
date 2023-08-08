@@ -2,7 +2,7 @@ import React from 'react';
 import Link from '@mui/material/Link';
 import { Box } from '@mui/material';
 import Stack from '@mui/material/Stack';
-
+import AppRoutes from '../routes'
 
 const Layout = ({ children }) => {
     return (
@@ -17,15 +17,11 @@ const Layout = ({ children }) => {
                                 marginRight: '10px',
                                 top: '80px'
                             }}>
-                        <item>
-                            <Link href='/' underline="hover">Pagina inicial</Link>
-                        </item>
-                        <item>
-                            <Link href='/matches' underline="hover">Últimas Partidas</Link>
-                        </item>
-                        <item>
-                            <Link href='/playerstats' underline="hover">Jogadores</Link>
-                        </item>
+                        {AppRoutes.map((route) => {
+                            return (
+                                <Link href={route.path} underline='hover'>{route.title}</Link>
+                            );
+                        })}
                     </Stack>
                 </nav>
             </header>
