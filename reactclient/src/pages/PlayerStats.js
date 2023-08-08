@@ -6,10 +6,10 @@ import Typography from '@mui/material/Typography';
 export default function Matches() {
   return (
     <Box>
-      <Typography variant='h3' paragraph="true">
+      <Typography variant='h3'>
         Estatisticas de cada jogador
       </Typography>
-      <Typography>
+      <Typography paragraph>
         Dados acumulativos
       </Typography>
       <PlayersStatsTable />

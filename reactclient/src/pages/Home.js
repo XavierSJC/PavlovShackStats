@@ -9,15 +9,18 @@ import ListItemButton from '@mui/material/ListItemButton';
 export default function Home() {
   return (
     <Box>
-      <Typography variant='h3' paragraph="true">
+      <Typography variant='h3'>
         Bem-vindo a página do servidor [BR]PowerSJK
         <br />
       </Typography>
-      <Typography>
-        <p>Olá, jogou recentemente do servidor [BR]PowerSJK?</p>
-        <p>Veja aqui como foi seu rendimento comparado a outros jogadores</p>
-      </Typography>
-      <br />
+      
+        <Typography paragraph></Typography>
+        <Typography paragraph>
+          Olá, jogou recentemente do servidor [BR]PowerSJK?
+        </Typography>
+        <Typography paragraph>
+          Veja aqui como foi seu rendimento comparado a outros jogadores
+        </Typography>
       
       <List sx={{
         listStyleType: 'disc',
