@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Build application server
 
 on:
   pull_request:
