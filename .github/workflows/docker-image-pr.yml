@@ -1,4 +1,4 @@
-name: Build application server
+name: Checks on Pull Request to main branch
 
 on:
   pull_request:
