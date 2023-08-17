@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          platforms: linux/amd64,linux/arm64/v8
+          platforms: linux/amd64,linux/arm64
           file: ./WebApplication1/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
