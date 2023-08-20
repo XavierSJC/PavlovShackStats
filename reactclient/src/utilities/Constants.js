@@ -1,5 +1,5 @@
-const API_BASE_URL_DEVELOPMENT = 'https://localhost:32768';
-const API_BASE_URL_PRODUCTION = 'https://appname.domainname.net';
+const API_BASE_URL_DEVELOPMENT = window._env_.API_URL_DEV;
+const API_BASE_URL_PRODUCTION = window._env_.API_URL;
 
 const ENDPOINTS = {
     GET_PLAYERS_STATS: 'api/PavlovShackStats/PlayersStats',
