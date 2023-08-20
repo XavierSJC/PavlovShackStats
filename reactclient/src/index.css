@@ -12,7 +12,7 @@ main {
 
 header {
   height: 100px;
-  background-image: url("https://scontent.oculuscdn.com/v/t64.5771-25/38982601_256649032709223_4626439425240025980_n.jpg?stp=dst-jpg_q92_s2048x2048&_nc_cat=104&ccb=1-7&_nc_sid=79b88e&_nc_ohc=Q_eV5PdkrrsAX-f-9hO&_nc_oc=AQmSPr61vqp3MQPeHCrwEh9VzZVdqCa9HFM2s3BpNuly4MzPcrs-orprXULuqkxCjGfYguCdOJU4iDooP_Aw-8JL&_nc_ht=scontent.oculuscdn.com&oh=00_AfCmNbE7oPUhxGg7DABLOX4W6C8pm5ZFjVRge7dxo6bQmg&oe=64CCBA2B");
+  background-image: url('./res/images/HeaderImage.jpg');
   background-repeat: no-repeat;
 }
 
