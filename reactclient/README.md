@@ -6,6 +6,11 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### `env.sh`
+
+Execute this script to insert the variables from file `.env` to `window._env_`
+This script is used by docker to get the environment variable and use it on runtime on react.
+
 ### `npm start`
 
 Runs the app in the development mode.\
