@@ -32,6 +32,15 @@ else
 	exit
 fi
 
+OldStatsPath="$StatsPath/old"
+if [ -d $OldStatsPath ]
+then
+	echo "Folder old alredy exist"
+else
+	mkdir $OldStatsPath
+	echo "Created folder to archive stats exported"
+fi
+
 while true
 do
 	echo "Starting exporting"
@@ -53,14 +62,14 @@ do
 			if [[ $postResult == "201" ]]
 			then
 				echo -e "\tFile sent successfully"
-				rm $file
+				mv $file $OldStatsPath/$filename
 			else
 				echo -e "\tERROR in the POST operation to URL: $url"
 				echo -e "\thttp_code: $postResult"
 				if [[ $postResult == *"already exist"* ]]
 				then
-					echo -e "\tMatch already sent, deleting file"
-					rm $file
+					echo -e "\tMatch already sent"
+					mv $file $OldStatsPath/$filename
 				elif [[ $postResult == *000* ]]
 				then
 					echo -e "\tCheck internet connection, this file will be exported again"
