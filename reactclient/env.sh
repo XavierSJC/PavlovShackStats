@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Recriar o arquivo de configuração
+# Recreate conf file
 rm -rf ./env-config.js
 touch ./env-config.js
 
@@ -8,7 +8,6 @@ touch ./env-config.js
 echo "window._env_ = {" >> ./env-config.js
 
 # Read each line from .env file
-# Cada linha representa pares chave-valor
 while read -r line || [[ -n "$line" ]];
 do
   # Split variables by character `=`
@@ -17,12 +16,12 @@ do
     varvalue=$(printf '%s\n' "$line" | sed -e 's/^[^=]*=//')
   fi
 
-  # Ler os valores da variável atual se existir como uma variável de ambiente
+  # Read value from environment variable if exist
   value=$(printf '%s\n' "${!varname}")
-  # Caso contrário, usar o valor do arquivo .env
+  # Else use values from .env file
   [[ -z $value ]] && value=${varvalue}
   
-  # Associar a propriedade de configuração ao arquivo JS
+  # Link configuration property to JS file
   echo "  $varname: \"$value\"," >> ./env-config.js
 done < .env
 
