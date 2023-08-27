@@ -1,8 +1,10 @@
 import React from 'react';
+import './Layout.css';
 import Link from '@mui/material/Link';
 import { Box } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import AppRoutes from '../routes'
+import Typography from '@mui/material/Typography';
 
 const Layout = ({ children }) => {
     return (
@@ -29,6 +31,7 @@ const Layout = ({ children }) => {
                 {children}
             </main>
             <footer>
+                <Typography paragraph>Não esqueça de nos seguir nas redes sociais:</Typography>
             </footer>
         </Box>
     )
