@@ -5,6 +5,10 @@ using WebApplication1.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddTransient<IPavlovShackStatsService, PavlovShackStatsService>();
+var rconIpAddress = builder.Configuration.GetSection("RconSettings").GetValue<string>("ipAddress");
+var rconPort = builder.Configuration.GetSection("RconSettings").GetValue<int>("port");
+var rconPassword = builder.Configuration.GetSection("RconSettings").GetValue<string>("password");
+builder.Services.AddSingleton<IGameStatusService>(serverStatusService => new GameStatusService(rconIpAddress, rconPort, rconPassword));
 
 builder.Services.AddCors(opt =>
 {
