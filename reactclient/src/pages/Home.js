@@ -5,6 +5,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
+import LiveMatch from '../components/LiveMach'
 
 export default function Home() {
   return (
@@ -13,7 +14,6 @@ export default function Home() {
         Bem-vindo a página do servidor [BR]PowerSJK
         <br />
       </Typography>
-      
         <Typography paragraph></Typography>
         <Typography paragraph>
           Olá, jogou recentemente do servidor [BR]PowerSJK?
@@ -40,6 +40,8 @@ export default function Home() {
           </ListItemButton>
         </ListItem>
       </List>
+
+      <LiveMatch />
     </Box>
   );
 }
