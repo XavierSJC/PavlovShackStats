@@ -104,7 +104,7 @@ export default class MatchTable extends Component {
         this.setState({ expandedMatch: Array(json.lenght).fill(false) });
       })
       .catch((error) => {
-        console.log("Error to fetch API server '", Constants.API_URL_GET_MATCH_DETAILS, "': ", error);
+        console.log("Error to fetch API server '", Constants.API_URL_GET_MATCHES, "': ", error);
       });
   }
 

@@ -1,12 +1,30 @@
 import React, { Component } from 'react';
 import Constants from '../utilities/Constants';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import { DataGrid } from '@mui/x-data-grid';
+
+const columns = [
+  {field: 'playerName', headerName: 'Jogador'},
+  {field: 'kills', headerName: 'Kills', type: 'number'},
+  {field: 'death', headerName: 'Deaths', type: 'number'},
+  {field: 'assist', headerName: 'Assistants', type: 'number'},
+  {field: 'headShot', headerName: 'HeadShots', type: 'number'},
+  {field: 'bombDefused', headerName: 'Bombas Desarmadas', type: 'number'},
+  {field: 'bombPlanted', headerName: 'Bombas Plantadas', type: 'number'},
+  {field: 'teamKill', headerName: 'Fogo Amigo', type: 'number'},
+  {
+    field: 'score', 
+    headerName: 'Pontuação', 
+    type: 'number',
+    valueGetter: (params) => 
+      params.row.kills*2 + 
+      params.row.death*-2 + 
+      params.row.assist + 
+      params.row.headShot + 
+      params.row.bombDefused*3 + 
+      params.row.bombPlanted*2 +
+      params.row.teamKill*-5
+  }
+]
 
 export default class PlayerStatsTable extends Component {
   static displayName = PlayerStatsTable.name;
@@ -20,58 +38,31 @@ export default class PlayerStatsTable extends Component {
     this.populatePlayersStatsData();
   }
 
-  static renderPlayersStats(playersStats) {
-    return (
-      <TableContainer component={Paper}>
-        <Table aria-label="Estatistica acumulada dos jogadores">
-          <TableHead>
-            <TableRow>
-              <TableCell>Jogador</TableCell>
-              <TableCell>Kills</TableCell>
-              <TableCell>Deaths</TableCell>
-              <TableCell>Assists</TableCell>
-              <TableCell>HeadShots</TableCell>
-              <TableCell>Bombas Desarmadas</TableCell>
-              <TableCell>Bombas Plantadas</TableCell>
-              <TableCell>Fogo amigo</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {playersStats.map(playerStat =>
-              <TableRow
-                key={playerStat.playerName}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell>{playerStat.playerName}</TableCell>
-                <TableCell align="right">{playerStat.kills}</TableCell>
-                <TableCell align="right">{playerStat.death}</TableCell>
-                <TableCell align="right">{playerStat.assist}</TableCell>
-                <TableCell align="right">{playerStat.headShot}</TableCell>
-                <TableCell align="right">{playerStat.bombDefused}</TableCell>
-                <TableCell align="right">{playerStat.bombPlanted}</TableCell>
-                <TableCell align="right">{playerStat.teamKill}</TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table >
-      </TableContainer>
-    )
-  }
-
   render() {
-    let playersStatsTable = this.state.loading
-      ? <p><em>Carregando...</em></p>
-      : PlayerStatsTable.renderPlayersStats(this.state.playersStats);
+    let playersStatsTable = this.state.loading ?
+      <p><em>Carregando...</em></p> :
+      PlayerStatsTable.DataTable(this.state.playersStats);
 
     return (
       <div>
+        Dados acumulativos 
+        {this.props.since ? ' desde '+ this.props.since : ''}
+        {this.props.until ? ' até '+ this.props.since : ''}
         {playersStatsTable}
       </div>
     );
   }
 
   async populatePlayersStatsData() {
-    await fetch(Constants.API_URL_GET_PLAYERS_STATS)
+    const searchParams = new URLSearchParams();
+    if(this.props.since)
+      searchParams.append("sinceDate", this.props.since);
+    if(this.props.until)
+      searchParams.append("untilDate", this.props.until);
+    if (this.props.gameMode)
+      searchParams.append("gameMode", this.props.gameMode);
+
+    await fetch(Constants.API_URL_GET_PLAYERS_STATS.concat('?', searchParams.toString()))
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -81,7 +72,29 @@ export default class PlayerStatsTable extends Component {
         this.setState({ playersStats: json, loading: false });
       })
       .catch((error) => {
-        console.log("Error to fetch API server '", Constants.API_URL_GET_MATCH_DETAILS, "': ", error);
+        console.log("Error to fetch API server '", Constants.API_URL_GET_PLAYERS_STATS, "': ", error);
       });
+  }
+
+  static DataTable(playersStats) {
+    return (
+      <div style={{width: '100%'}}>
+        <DataGrid
+          style={{width: '100%'}}
+          rows={playersStats}
+          columns={columns}
+          getRowId={(row) => row.playerName}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 25 },
+            },
+            sorting: {
+              sortModel: [{field: 'score', sort: 'desc'}]
+            }
+          }}
+          pageSizeOptions={[25, 50, 100]}
+        />
+      </div>
+    )
   }
 }

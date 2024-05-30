@@ -39,6 +39,11 @@ export default function Home() {
             <ListItemText primary="Últimas Partidas" />
           </ListItemButton>
         </ListItem>
+        <ListItem>
+          <ListItemButton component="a" href='/sessions'>
+            <ListItemText primary="Temporadas" />
+          </ListItemButton>
+        </ListItem>
       </List>
 
       <LiveMatch />

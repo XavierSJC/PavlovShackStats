@@ -1,6 +1,7 @@
 import Home from "./pages/Home";
 import Matches from "./pages/Matches";
 import PlayerStats from "./pages/PlayerStats"
+import Sessions from "./pages/Sessions"
 
 const AppRoutes = [
   {
@@ -18,6 +19,11 @@ const AppRoutes = [
     path: '/playerstats',
     element: <PlayerStats />,
     title: 'Jogadores' 
+  },
+  {
+    path: '/sessions',
+    element: <Sessions />,
+    title: 'Temporadas' 
   }
 ];
 
