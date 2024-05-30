@@ -10,10 +10,12 @@ namespace WebApplication1.Services
         object GetPlayerStats(int playerId);
         object GetPlayerMatches(string playerName);
         object GetPlayerMatches(int playerId);
+        object GetPlayersStats(DateTime sinceDate, DateTime untilDate, string playerName, string gameMode, int count);
         IQueryable<object> GetMatches();
         object ListPlayers();
         object GetMatch(int matchId);
         object GetMatch(DateTime matchDate);
         object GetMatchDetails(int matchId);
+        object GetGameModeList();
     }
 }

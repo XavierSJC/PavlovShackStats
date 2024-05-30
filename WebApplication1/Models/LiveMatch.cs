@@ -2,6 +2,9 @@
 {
     public class LiveMatch
     {
+        public string? MapLabel { get; set; }
+        public string? PlayerCount { get; set; }
+        public int Round { get; set; }
         public int ScoreTeam0 { get; set; }
         public int ScoreTeam1 { get; set; }
         public IList<LivePlayer> Team0 { get; set; } = new List<LivePlayer>();

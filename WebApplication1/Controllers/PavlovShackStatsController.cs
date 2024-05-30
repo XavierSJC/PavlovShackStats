@@ -31,11 +31,17 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet("PlayersStats")]
-        public ActionResult GetPlayersStats() 
+        public ActionResult GetPlayersStats(
+            [FromQuery] DateTime sinceDate,
+            [FromQuery] DateTime untilDate,
+            [FromQuery] string playerName = "",
+            [FromQuery] string gameMode = "",
+            [FromQuery] int count = int.MaxValue
+        ) 
         {
             try
             {
-                return Ok(_PavlovShackStats.GetPlayersStats());
+                return Ok(_PavlovShackStats.GetPlayersStats(sinceDate, untilDate, playerName, gameMode, count));
             }
             catch (Exception ex)
             {
@@ -159,5 +165,17 @@ namespace WebApplication1.Controllers
             }
         }
 
+        [HttpGet("GameModeList")]
+        public ActionResult GetGameModeList()
+        {
+            try
+            {
+                return Ok(_PavlovShackStats.GetGameModeList());
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }
