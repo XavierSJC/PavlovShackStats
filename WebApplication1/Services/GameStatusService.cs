@@ -33,8 +33,6 @@ namespace WebApplication1.Services
                         ServerInfoReply serverInfoReply = await new ServerInfoCommand().ExecuteCommand(_Rcon);
                         await Task.Delay(_delayNextCommandIntervalMs);
                         InspectAllReply inspectAllReply = await new InspectAllCommand().ExecuteCommand(_Rcon);
-                        //await Task.Delay(_delayNextCommandIntervalMs);
-                        //var refreshListCommand = await new Classes.RefreshListCommand().ExecuteCommand(_Rcon);
                        
                         _liveMatch = GetLiveMatchInfo(serverInfoReply.ServerInfo, inspectAllReply.InspectList);
                     }
@@ -73,6 +71,9 @@ namespace WebApplication1.Services
         {
             var result = new LiveMatch()
             {
+                MapLabel = serverInfo.MapLabel,
+                PlayerCount = serverInfo.PlayerCount,
+                Round = serverInfo.Round ?? 0,
                 ScoreTeam0 = serverInfo.Team0Score ?? 0,
                 ScoreTeam1 = serverInfo.Team1Score ?? 0
             };
@@ -82,11 +83,21 @@ namespace WebApplication1.Services
                 if (player == null) continue;
                 if (player.TeamId == 0)
                 {
-                    result.Team0.Add(new LivePlayer() { PlayerName =  player.PlayerName, Dead = player.Dead });
+                    result.Team0.Add(new LivePlayer() { 
+                        PlayerName =  player.PlayerName, 
+                        Cash = player.Cash,
+                        KDA = player.KDA,
+                        Dead = player.Dead 
+                        });
                 }
                 else
                 {
-                    result.Team1.Add(new LivePlayer() { PlayerName = player.PlayerName, Dead = player.Dead });
+                    result.Team1.Add(new LivePlayer() { 
+                        PlayerName =  player.PlayerName, 
+                        Cash = player.Cash,
+                        KDA = player.KDA,
+                        Dead = player.Dead 
+                        });
                 }
             }
 

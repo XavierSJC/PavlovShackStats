@@ -41,9 +41,9 @@ namespace WebApplication1.Services
             {
                 throw new Exception("This match already exist in DB");
             }
-            var match = new PavlovShackStats.Models.Match();            
+            var match = new PavlovShackStats.Models.Match();
             match.Map = GetMap(Stats.MapLabel);
-            match.GameMode = GetGameMode(Stats.GameMode);          
+            match.GameMode = GetGameMode(Stats.GameMode);
             match.PlayerCount = Stats.PlayerCount;
             match.Team0Score = Stats.Team0Score;
             match.Team1Score = Stats.Team1Score;
@@ -318,6 +318,53 @@ namespace WebApplication1.Services
                 };
 
             return query.ToList();
+        }
+
+        public object GetPlayersStats(DateTime sinceDate, DateTime untilDate, string playerName, string gameMode, int count)
+        {
+            if (untilDate.Equals(new DateTime()))
+            {
+                untilDate = new DateTime(DateTime.Now.Ticks);
+            }
+
+            var query =
+                from playerStats in _dbContext.MatchersPlayerStats
+                join player in _dbContext.Players on playerStats.PlayerId equals player.PlayerId
+                join matches in _dbContext.Matchers on playerStats.MatchId equals matches.MatchId
+                where matches.FinishedTime > sinceDate
+                   && matches.FinishedTime < untilDate
+                   && matches.GameMode.Name.Contains(gameMode)
+                group playerStats by new { player.Name } into g
+                select new
+                {
+                    PlayerName = g.Key.Name,
+                    Kills = g.Sum(_ => _.Kill),
+                    Death = g.Sum(_ => _.Death),
+                    Assist = g.Sum(_ => _.Asssistant),
+                    HeadShot = g.Sum(_ => _.Headshot),
+                    BombDefused = g.Sum(_ => _.BombDefused),
+                    BombPlanted = g.Sum(_ => _.BombPlanted),
+                    TeamKill = g.Sum(_ => _.TeamKill)
+                };
+
+            if (string.IsNullOrEmpty(playerName))
+            {
+                return query.Take(count);
+            }
+            return query.Where(p => p.PlayerName.ToLower().Contains(playerName.ToLower())).Take(count);
+        }
+
+        public object GetGameModeList()
+        {
+            var query =
+                from gameMode in _dbContext.GameModes
+                select new
+                {
+                    gameMode.GameModeId,
+                    gameMode.Name
+                };
+
+            return query;
         }
     }
 }
