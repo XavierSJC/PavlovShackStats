@@ -10,10 +10,6 @@ import PlayerStatsTable from '../components/PlayerStatsTable';
 export default class Sessions extends Component {
   static displayName = Sessions.name;
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <Box>
@@ -25,9 +21,9 @@ export default class Sessions extends Component {
         </Typography>
         <br/>
         <Typography variant='h4'>
-          Temporada atual (iniciada em 01/Abr/2024):
+          Temporada {this.props.title} (iniciada em {this.props.since} e termina em {this.props.until}):
         </Typography>
-        <PlayerStatsTable since='2024-04-01' gameMode='SND'/>
+        <PlayerStatsTable since={this.props.since} until={this.props.until} gameMode='SND'/>
         <br/><br/><br/>
         <Typography variant='h4'>
           Temporadas anteriores:
@@ -41,11 +37,14 @@ export default class Sessions extends Component {
             }
           }}>
             <ListItem>
-            <ListItemButton component="a" href="#">
+            <ListItemButton component="a" href="/session0">
                 <ListItemText primary="Temporada 0" />
               </ListItemButton>
-              <ListItemButton component="a" href="#">
+              <ListItemButton component="a" href="/session1">
                 <ListItemText primary="Temporada 1" />
+              </ListItemButton>
+              <ListItemButton component="a" href="/session2">
+                <ListItemText primary="Temporada 2" />
               </ListItemButton>
             </ListItem>
           </List>

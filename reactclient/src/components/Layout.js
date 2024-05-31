@@ -26,7 +26,7 @@ const Layout = ({ children }) => {
                             }}>
                         {AppRoutes.map((route) => {
                             return (
-                                <Link href={route.path} underline='hover'>{route.title}</Link>
+                                <Link href={route.path} underline='hover' hidden={route.HiddenInHeader}>{route.title}</Link>
                             );
                         })}
                     </Stack>
