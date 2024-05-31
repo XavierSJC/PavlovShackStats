@@ -5,6 +5,11 @@ import { Box } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import AppRoutes from '../routes'
 import Typography from '@mui/material/Typography';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import TikTokIcon from '../utilities/TikTokIcon';
+import TwitchIcon from '../utilities/TwitchIcon';
 
 const Layout = ({ children }) => {
     return (
@@ -31,7 +36,14 @@ const Layout = ({ children }) => {
                 {children}
             </main>
             <footer>
-                <Typography paragraph>Não esqueça de nos seguir nas redes sociais:</Typography>
+                <Typography paragraph>Não esqueça de nos seguir nas redes sociais: 
+                    <a href='https://www.youtube.com/@kinu_dw'><YouTubeIcon /></a>
+                    <a href='https://www.tiktok.com/@kinu_dw'><TikTokIcon width='22px'/></a>
+                    <a href='https://www.twitch.tv/kinu_dw'><TwitchIcon width='22px'/></a>
+                    <a href='https://www.facebook.com/kinudw'><FacebookIcon/></a>
+                    <a href='https://www.instagram.com/kinu_dw'><InstagramIcon/></a>
+                </Typography>
+
             </footer>
         </Box>
     )

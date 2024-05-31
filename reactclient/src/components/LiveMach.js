@@ -10,6 +10,15 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { FaSkull } from "react-icons/fa";
 
+function maxRound(scoreTeam0, scoreTeam1) {
+  if (scoreTeam0 > scoreTeam1) {
+    return ((10 - scoreTeam0) + scoreTeam0 + scoreTeam1)
+  }
+  else {
+    return ((10 - scoreTeam1) + scoreTeam0 + scoreTeam1)
+  }
+}
+
 export default class LiveMatch extends Component {
   static displayName = LiveMatch.name;
 
@@ -34,7 +43,7 @@ export default class LiveMatch extends Component {
         <Table aria-label="Informações sobre a partida atual">
           <TableHead>
               <TableCell style={{ backgroundColor: '#ee605d' }}>Score: {matchDetails.scoreTeam0}</TableCell>
-              <TableCell style={{ textAlign: 'center'}}>Round {matchDetails.scoreTeam0+matchDetails.scoreTeam1+1}/15</TableCell>
+              <TableCell style={{ textAlign: 'center'}}>Round {matchDetails.scoreTeam0+matchDetails.scoreTeam1+1}/{maxRound(matchDetails.scoreTeam0, matchDetails.scoreTeam1)}</TableCell>
               <TableCell style={{ backgroundColor: '#008fd7' }}>Score: {matchDetails.scoreTeam1}</TableCell>
           </TableHead>
           <TableBody>
