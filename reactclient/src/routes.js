@@ -9,7 +9,7 @@ const AppRoutes = [
     path: '/',
     element: <Home />,
     title: 'Página inicial',
-    HiddenInHeader: 'false'
+    HiddenInHeader: false
   },
   {
     path: '/matches',
