@@ -47,7 +47,7 @@ export default class PlayerStatsTable extends Component {
       <div>
         Dados acumulativos 
         {this.props.since ? ' desde '+ this.props.since : ''}
-        {this.props.until ? ' até '+ this.props.since : ''}
+        {this.props.until ? ' até '+ this.props.until : ''}
         {playersStatsTable}
       </div>
     );
