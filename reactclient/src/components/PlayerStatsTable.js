@@ -41,7 +41,7 @@ const columns = [
     headerName: 'KDA',
     type: 'number',
     valueGetter: (params) =>
-      (params.row.kills + params.row.assist)/params.row.death
+      (params.row.kills + params.row.assist)/(params.row.numMatches < 30 ? 999999 : params.row.death)
   },
   {
     field: 'ScoreAverage',
@@ -78,10 +78,15 @@ export default class PlayerStatsTable extends Component {
 
     return (
       <div>
+        <p>
         Dados acumulativos 
-        {this.props.since ? ' desde '+ this.props.since : ''}
-        {this.props.until ? ' até '+ this.props.until : ''}
-        {playersStatsTable}
+          {this.props.since ? ' desde '+ this.props.since : ''}
+          {this.props.until ? ' até '+ this.props.until : ''}
+        </p>
+        <p>
+          Jogadores com menos de 30 partidas possuem seu KDA e Pontuação Média ZERADA.
+        </p>
+          {playersStatsTable}
       </div>
     );
   }

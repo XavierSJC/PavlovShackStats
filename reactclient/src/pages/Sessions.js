@@ -21,7 +21,7 @@ export default class Sessions extends Component {
         </Typography>
         <br/>
         <Typography variant='h4'>
-          Temporada {this.props.title} (iniciada em {this.props.since} e termina em {this.props.until}):
+          Temporada {this.props.title} (desde {this.props.since} até {this.props.until}):
         </Typography>
         <PlayerStatsTable since={this.props.since} until={this.props.until} gameMode='SND'/>
         <br/><br/><br/>
