@@ -2,6 +2,16 @@ import React, { Component } from 'react';
 import Constants from '../utilities/Constants';
 import { DataGrid } from '@mui/x-data-grid';
 
+function getScore(kill, death, assist, hs, bd, bp, tk) {
+  return kill*2 + 
+    death*-2 + 
+    assist + 
+    hs + 
+    bd*3 + 
+    bp*2 +
+    tk*-5
+}
+
 const columns = [
   {field: 'playerName', headerName: 'Jogador'},
   {field: 'kills', headerName: 'Kills', type: 'number'},
@@ -11,18 +21,41 @@ const columns = [
   {field: 'bombDefused', headerName: 'Bombas Desarmadas', type: 'number'},
   {field: 'bombPlanted', headerName: 'Bombas Plantadas', type: 'number'},
   {field: 'teamKill', headerName: 'Fogo Amigo', type: 'number'},
+  {field: 'numMatches', headerName: 'Partidas Jogadas', type: 'number'},
   {
     field: 'score', 
     headerName: 'Pontuação', 
     type: 'number',
     valueGetter: (params) => 
-      params.row.kills*2 + 
-      params.row.death*-2 + 
-      params.row.assist + 
-      params.row.headShot + 
-      params.row.bombDefused*3 + 
-      params.row.bombPlanted*2 +
-      params.row.teamKill*-5
+      getScore(params.row.kills,
+        params.row.death,
+        params.row.assist,
+        params.row.headShot,
+        params.row.bombDefused,
+        params.row.bombPlanted,
+        params.row.teamKill,
+      )
+  },
+  {
+    field: 'KDA',
+    headerName: 'KDA',
+    type: 'number',
+    valueGetter: (params) =>
+      (params.row.kills + params.row.assist)/(params.row.numMatches < 30 ? 999999 : params.row.death)
+  },
+  {
+    field: 'ScoreAverage',
+    headerName: 'P. Média',
+    type: 'number',
+    valueGetter: (params) =>
+      getScore(params.row.kills,
+        params.row.death,
+        params.row.assist,
+        params.row.headShot,
+        params.row.bombDefused,
+        params.row.bombPlanted,
+        params.row.teamKill,
+      ) / (params.row.numMatches < 30 ? 999999 : params.row.numMatches)
   }
 ]
 
@@ -45,10 +78,15 @@ export default class PlayerStatsTable extends Component {
 
     return (
       <div>
+        <p>
         Dados acumulativos 
-        {this.props.since ? ' desde '+ this.props.since : ''}
-        {this.props.until ? ' até '+ this.props.until : ''}
-        {playersStatsTable}
+          {this.props.since ? ' desde '+ this.props.since : ''}
+          {this.props.until ? ' até '+ this.props.until : ''}
+        </p>
+        <p>
+          Jogadores com menos de 30 partidas possuem seu KDA e Pontuação Média ZERADA.
+        </p>
+          {playersStatsTable}
       </div>
     );
   }

@@ -42,23 +42,44 @@ export default class LiveMatch extends Component {
       <TableContainer component={Paper}>
         <Table aria-label="Informações sobre a partida atual">
           <TableHead>
-              <TableCell style={{ backgroundColor: '#ee605d' }}>Score: {matchDetails.scoreTeam0}</TableCell>
+            <TableCell style={{ textAlign: 'left' }}>Mapa: {matchDetails.mapLabel}</TableCell>
+            <TableCell/>
+            <TableCell/>
+            <TableCell/>
+            <TableCell/>
+            <TableCell/>
+            <TableCell style={{ textAlign: 'right' }}>Jogadores: {matchDetails.playerCount}</TableCell>
+          </TableHead>
+          <TableHead>
+              <TableCell style={{ backgroundColor: '#ee605d', textAlign: 'right' }}>Pontuação: {matchDetails.scoreTeam0}</TableCell>
+              <TableCell style={{ backgroundColor: '#ee605d' }}>K/D/A</TableCell>
+              <TableCell style={{ backgroundColor: '#ee605d' }}>Cash</TableCell>
               <TableCell style={{ textAlign: 'center'}}>Round {matchDetails.scoreTeam0+matchDetails.scoreTeam1+1}/{maxRound(matchDetails.scoreTeam0, matchDetails.scoreTeam1)}</TableCell>
-              <TableCell style={{ backgroundColor: '#008fd7' }}>Score: {matchDetails.scoreTeam1}</TableCell>
+              <TableCell style={{ backgroundColor: '#008fd7' }}>Pontuação: {matchDetails.scoreTeam1}</TableCell>
+              <TableCell style={{ backgroundColor: '#008fd7' }}>K/D/A</TableCell>
+              <TableCell style={{ backgroundColor: '#008fd7' }}>Cash</TableCell>
           </TableHead>
           <TableBody>
             { isTeam0Bigger ? 
               matchDetails.team0.map((player, index) =>
               <TableRow key={index}>
                 <TableCell style={{ textAlign: 'right'}}>{player.dead ? <FaSkull /> : ''} {player.playerName}</TableCell>
+                <TableCell>{player.kda}</TableCell>
+                <TableCell>{player.cash}</TableCell>
                 <TableCell/>
                 <TableCell>{matchDetails.team1[index]?.playerName} {matchDetails.team1[index]?.dead ? <FaSkull /> : ''}</TableCell>
+                <TableCell>{matchDetails.team1[index]?.kda}</TableCell>
+                <TableCell>{matchDetails.team1[index]?.cash}</TableCell>
               </TableRow>)
               : matchDetails.team1.map((player, index) =>
               <TableRow key={index}>
                 <TableCell style={{ textAlign: 'right'}}>{matchDetails.team0[index]?.dead ? <FaSkull /> : ''} {matchDetails.team0[index]?.playerName}</TableCell>
+                <TableCell>{matchDetails.team0[index]?.kda}</TableCell>
+                <TableCell>{matchDetails.team0[index]?.cash}</TableCell>
                 <TableCell/>
                 <TableCell>{player.playerName} {player.dead ? <FaSkull /> : ''}</TableCell>
+                <TableCell>{player.kda}</TableCell>
+                <TableCell>{player.cash}</TableCell>
               </TableRow>
             )}
           </TableBody>
