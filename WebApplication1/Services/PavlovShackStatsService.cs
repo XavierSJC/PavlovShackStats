@@ -331,8 +331,8 @@ namespace WebApplication1.Services
                 from playerStats in _dbContext.MatchersPlayerStats
                 join player in _dbContext.Players on playerStats.PlayerId equals player.PlayerId
                 join matches in _dbContext.Matchers on playerStats.MatchId equals matches.MatchId
-                where matches.FinishedTime > sinceDate
-                   && matches.FinishedTime < untilDate
+                where matches.FinishedTime >= sinceDate
+                   && matches.FinishedTime <= untilDate
                    && matches.GameMode.Name.Contains(gameMode)
                 group playerStats by new { player.Name } into g
                 select new
@@ -344,7 +344,8 @@ namespace WebApplication1.Services
                     HeadShot = g.Sum(_ => _.Headshot),
                     BombDefused = g.Sum(_ => _.BombDefused),
                     BombPlanted = g.Sum(_ => _.BombPlanted),
-                    TeamKill = g.Sum(_ => _.TeamKill)
+                    TeamKill = g.Sum(_ => _.TeamKill),
+                    NumMatches = g.Count()
                 };
 
             if (string.IsNullOrEmpty(playerName))
