@@ -46,6 +46,9 @@ export default class Sessions extends Component {
               <ListItemButton component="a" href="/session2">
                 <ListItemText primary="Temporada 2" />
               </ListItemButton>
+              <ListItemButton component="a" href="/session3">
+                <ListItemText primary="Temporada 3" />
+              </ListItemButton>
             </ListItem>
           </List>
         </Typography>
