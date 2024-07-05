@@ -42,7 +42,7 @@ export default class LiveMatch extends Component {
       <TableContainer component={Paper}>
         <Table aria-label="Informações sobre a partida atual">
           <TableHead>
-            <TableCell style={{ textAlign: 'left' }}>Mapa: {matchDetails.mapLabel}</TableCell>
+            <TableCell style={{ textAlign: 'left' }}>Mapa: {matchDetails.mapName}</TableCell>
             <TableCell/>
             <TableCell/>
             <TableCell/>
