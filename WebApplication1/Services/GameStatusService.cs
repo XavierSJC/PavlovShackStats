@@ -1,7 +1,4 @@
 ﻿using PavlovVR_Rcon;
-using PavlovVR_Rcon.Models.Commands;
-using PavlovVR_Rcon.Models.Pavlov;
-using PavlovVR_Rcon.Models.Replies;
 using WebApplication1.Classes;
 using WebApplication1.Models;
 
@@ -67,12 +64,14 @@ namespace WebApplication1.Services
             return true;
         }
 
-        private LiveMatch GetLiveMatchInfo(ServerInfo serverInfo, PlayerDetailShack[] playersDetail)
+        private LiveMatch GetLiveMatchInfo(ServerInfoShack serverInfo, PlayerDetailShack[] playersDetail)
         {
             var result = new LiveMatch()
             {
                 MapLabel = serverInfo.MapLabel,
+                MapName = serverInfo.MapName,
                 PlayerCount = serverInfo.PlayerCount,
+                RoundState = serverInfo.RoundState,
                 Round = serverInfo.Round ?? 0,
                 ScoreTeam0 = serverInfo.Team0Score ?? 0,
                 ScoreTeam1 = serverInfo.Team1Score ?? 0
