@@ -16,7 +16,7 @@ const Layout = ({ children }) => {
         <Box>
             <header>
                 <nav>
-                    <Stack className='test' direction="row" spacing={2}
+                    <Stack className='headerNavigation' direction="row" spacing={2}
                         sx={
                             {
                                 position: 'absolute',

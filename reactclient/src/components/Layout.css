@@ -3,15 +3,16 @@
   padding: 0;
 }
 
-header,
-main {
-  margin: 3px;
-  justify-content: center;
-}
-
 header {
   height: 100px;
   background-image: url('../res/images/HeaderImage.jpg');
   background-repeat: no-repeat;
+  background-position: 5%;
+  background-size: cover;
+  
 }
 
+main {
+  margin: 3px;
+  justify-content: center;
+}

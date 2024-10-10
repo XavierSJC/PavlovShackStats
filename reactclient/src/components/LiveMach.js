@@ -42,13 +42,13 @@ export default class LiveMatch extends Component {
       <TableContainer component={Paper}>
         <Table aria-label="Informações sobre a partida atual">
           <TableHead>
-            <TableCell style={{ textAlign: 'left' }}>Mapa: {matchDetails.mapName}</TableCell>
+            <TableCell style={{ textAlign: 'right' }}>Mapa: {matchDetails.mapName}</TableCell>
             <TableCell/>
             <TableCell/>
             <TableCell/>
             <TableCell/>
             <TableCell/>
-            <TableCell style={{ textAlign: 'right' }}>Jogadores: {matchDetails.playerCount}</TableCell>
+            <TableCell style={{ textAlign: 'left' }}>Jogadores: {matchDetails.playerCount}</TableCell>
           </TableHead>
           <TableHead>
               <TableCell style={{ backgroundColor: '#ee605d', textAlign: 'right' }}>Pontuação: {matchDetails.scoreTeam0}</TableCell>
