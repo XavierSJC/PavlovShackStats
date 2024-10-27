@@ -41,3 +41,8 @@ Please check out the Authentication info values from [here](https://docs.mod.io/
 ```
 docker build -t <image name> -f ./WebApplication1/Dockerfile ./
 ```
+
+This project is compatible with ARM architecture, please use the command below to build a project target to ARM.
+```
+docker build -t <image name> --platform linux/arm64 -f ./WebApplication1/Dockerfile ./
+```
