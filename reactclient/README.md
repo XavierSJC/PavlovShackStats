@@ -1,6 +1,17 @@
-# Getting Started with Create React App
+# React Client to Pavlov VR Stats
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Docker Image
+The project provides a docker image.
+
+### Environment Variables
+**API_URL**: Address of the API provided my this project.
+
+### Build
+```
+docker build -t <image name> -f ./reactclient/Dockerfile ./reactclient
+```
 
 ## Available Scripts
 
