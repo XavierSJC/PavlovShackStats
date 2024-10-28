@@ -1,8 +1,15 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using PavlovShackStats.Data;
 using WebApplication1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
 
 builder.Services.AddTransient<IPavlovShackStatsService, PavlovShackStatsService>();
 var rconIpAddress = builder.Configuration.GetSection("RconSettings").GetValue<string>("ipAddress");
@@ -31,6 +38,8 @@ builder.Services.AddDbContext<PavlovShackStatsContext>(opt =>
 
 var app = builder.Build();
 
+app.UseForwardedHeaders();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -42,8 +51,6 @@ else
 {
     app.UseExceptionHandler("/error");
 }
-
-app.UseHttpsRedirection();
 
 app.UseCors();
 
