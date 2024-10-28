@@ -1,0 +1,33 @@
+version: '3.4'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: reverse_proxy
+    restart: always
+    volumes:
+     - ./conf.d:/etc/nginx/conf.d
+     - ./certs/conf:/etc/nginx/certs
+    ports:
+     - 80:80
+     - 443:443
+    networks: 
+     - network-rc
+    depends_on:
+     - "api"
+
+  api:
+    image: powersjk/pavlov-stats:rc
+    container_name: api
+    environment:
+      RconSettings__ipAddress: ${RCON_IP} 
+      RconSettings__port: ${RCON_PORT} 
+      RconSettings__password: ${RCON_PASSWORD}
+    expose:
+     - 80
+    networks: 
+     - network-rc
+
+networks:
+  network-rc:
+    driver: bridge
