@@ -25,7 +25,7 @@ const AppRoutes = [
   },
   {
     path: '/sessions',
-    element: <Sessions title='atual' since='2024-07-01' until='2024-09-30'/>,
+    element: <Sessions title='atual' since='2024-10-01' until='2024-12-31'/>,
     title: 'Temporadas',
     HiddenInHeader: false
   },
@@ -49,8 +49,14 @@ const AppRoutes = [
   },
   {
     path: '/session3',
-    element: <Sessions title='atual' since='2024-07-01' until='2024-09-30'/>,
+    element: <Sessions title='3' since='2024-07-01' until='2024-09-30'/>,
     title: 'Temporada 3',
+    HiddenInHeader: true
+  },
+  {
+    path: '/session4',
+    element: <Sessions title='atual' since='2024-10-01' until='2024-12-31'/>,
+    title: 'Temporada 4',
     HiddenInHeader: true
   }
 ];
