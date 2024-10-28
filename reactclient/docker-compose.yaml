@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  web:
+    image: ${IMAGE_APP_SITE}
+    restart: always
+    volumes:
+     - ./conf.d:/etc/nginx/conf.d
+     - ./certbot/conf:/etc/nginx/ssl
+     - ./certbot/data:/usr/share/nginx/html/letsencrypt
+    ports:
+     - 80:80
+     - 443:443
+
+  certbot:
+    image: certbot/certbot:latest
+    command: certonly --webroot --webroot-path=/usr/share/nginx/html/letsencrypt --email ${CERTBOT_EMAIL} --agree-tos --no-eff-email -d ${CERTBOT_DOMAIN}
+    volumes:
+     - ./certbot/conf:/etc/letsencrypt
+     - ./certbot/logs:/var/log/letsencrypt
+     - ./certbot/data:/usr/share/nginx/html/letsencrypt
