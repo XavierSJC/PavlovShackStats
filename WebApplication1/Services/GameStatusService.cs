@@ -70,6 +70,7 @@ namespace WebApplication1.Services
             {
                 MapLabel = serverInfo.MapLabel,
                 MapName = serverInfo.MapName,
+                GameModeName = serverInfo.GameModeName,
                 PlayerCount = serverInfo.PlayerCount,
                 RoundState = serverInfo.RoundState,
                 Round = serverInfo.Round ?? 0,
