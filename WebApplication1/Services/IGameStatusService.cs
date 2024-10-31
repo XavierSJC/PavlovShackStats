@@ -4,5 +4,6 @@
     {
         object IsRunning();
         object GetLiveMatchInfo();
+        object GetListMaps();
     }
 }

@@ -320,7 +320,7 @@ namespace WebApplication1.Services
             return query.ToList();
         }
 
-        public object GetPlayersStats(DateTime sinceDate, DateTime untilDate, string playerName, string gameMode, int count)
+        public object GetPlayersStats(DateTime sinceDate, DateTime untilDate, DayOfWeek[] daysOfWeek, string playerName, string gameMode, int count)
         {
             if (untilDate.Equals(new DateTime()))
             {
@@ -332,8 +332,9 @@ namespace WebApplication1.Services
                 join player in _dbContext.Players on playerStats.PlayerId equals player.PlayerId
                 join matches in _dbContext.Matchers on playerStats.MatchId equals matches.MatchId
                 where matches.FinishedTime >= sinceDate
-                   && matches.FinishedTime <= untilDate
-                   && matches.GameMode.Name.Contains(gameMode)
+                      && matches.FinishedTime <= untilDate
+                      && daysOfWeek.Contains(matches.FinishedTime.DayOfWeek)
+                      && matches.GameMode.Name.Contains(gameMode)
                 group playerStats by new { player.Name } into g
                 select new
                 {
@@ -352,6 +353,7 @@ namespace WebApplication1.Services
             {
                 return query.Take(count);
             }
+
             return query.Where(p => p.PlayerName.ToLower().Contains(playerName.ToLower())).Take(count);
         }
 

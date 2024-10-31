@@ -34,6 +34,7 @@ namespace WebApplication1.Controllers
         public ActionResult GetPlayersStats(
             [FromQuery] DateTime sinceDate,
             [FromQuery] DateTime untilDate,
+            [FromQuery] DayOfWeek[] daysOfWeek,
             [FromQuery] string playerName = "",
             [FromQuery] string gameMode = "",
             [FromQuery] int count = int.MaxValue
@@ -41,7 +42,18 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                return Ok(_PavlovShackStats.GetPlayersStats(sinceDate, untilDate, playerName, gameMode, count));
+                if (daysOfWeek.Count() < 1)
+                {
+                    daysOfWeek = new DayOfWeek[7] { 
+                        DayOfWeek.Sunday, 
+                        DayOfWeek.Monday,
+                        DayOfWeek.Tuesday,
+                        DayOfWeek.Wednesday,
+                        DayOfWeek.Thursday,
+                        DayOfWeek.Friday,
+                        DayOfWeek.Saturday};
+                }
+                return Ok(_PavlovShackStats.GetPlayersStats(sinceDate, untilDate, daysOfWeek, playerName, gameMode, count));
             }
             catch (Exception ex)
             {

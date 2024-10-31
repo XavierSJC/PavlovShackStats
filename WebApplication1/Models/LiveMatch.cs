@@ -4,6 +4,7 @@
     {
         public string? MapLabel { get; set; }
         public string? MapName { get; set; }
+        public string? GameModeName { get; set; }
         public string? PlayerCount { get; set; }
         public string? RoundState { get; set; }
         public int Round { get; set; }
