@@ -39,5 +39,18 @@ namespace WebApplication1.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpGet("MapList")]
+        public ActionResult GetMapList()
+        {
+            try
+            {
+                return Ok(_GameStatusService.GetListMaps());
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

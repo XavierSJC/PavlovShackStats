@@ -1,21 +1,27 @@
 ﻿using PavlovVR_Rcon;
 using WebApplication1.Classes;
 using WebApplication1.Models;
+using WebApplication1.Models.Mod.io;
 
 namespace WebApplication1.Services
 {
     public class GameStatusService : IGameStatusService
     {
-        private static int _updateMatchIntervalMs = 5000;
+        private static int _updateMatchIntervalMs = 3000;
+        private static int _updateMapsIntervalMs = 21600000;
         private static int _delayNextCommandIntervalMs = 333;
         private PavlovRcon _Rcon;
         private LiveMatch _liveMatch;
-
-        public GameStatusService(string gameServerAddress, int rconPort, string rconPassword)
+        private IList<object> _mapList;
+        private IModIoService _modIoService;
+        public GameStatusService(IModIoService modIoService, string gameServerAddress, int rconPort, string rconPassword)
         {
+            _modIoService = modIoService;
             _Rcon = new(gameServerAddress, rconPort, rconPassword);
             _liveMatch = new LiveMatch();
+            _mapList = new List<object>();
             _ = WatchMatchInfo();
+            _ = WatchMapListInfo();
         }
 
         private async Task WatchMatchInfo()
@@ -112,6 +118,60 @@ namespace WebApplication1.Services
         public object IsRunning()
         {
             return _Rcon.Connected;
+        }
+
+        public async Task WatchMapListInfo()
+        {
+            while (true)
+            {
+                if (await IsConnected())
+                {
+                    var mapListReply = await new MapListCommand().ExecuteCommand(_Rcon);
+                    _mapList.Clear();
+                    foreach (var map in mapListReply.MapList)
+                    {
+                        if (map.MapId.ToLower().StartsWith("ugc"))
+                        {
+                            Mod mapInfo = _modIoService.GetModDetailsByResourceId(int.Parse(map.MapId.Substring(3)));
+                            _mapList.Add(new
+                            {
+                                id = mapInfo.id,
+                                name = mapInfo.name,
+                                mode = map.GameMode,
+                                status = mapInfo.status,
+                                visible = mapInfo.visible,
+                                submitted_by = mapInfo.submitted_by,
+                                logo = mapInfo.logo,
+                                summary = mapInfo.summary,
+                                profile_url = mapInfo.profile_url,
+                                tags = mapInfo.tags
+                            });
+                        }
+                        else
+                        {
+                            _mapList.Add(new 
+                            {
+                                name = map.MapId,
+                                mode = map.GameMode
+                            });
+                        }
+                    }
+                }
+
+                if (_mapList.Count <= 0)
+                {
+                    await Task.Delay(11000);
+                }
+                else
+                {
+                    await Task.Delay(_updateMapsIntervalMs);
+                }
+            }
+        }
+
+        public object GetListMaps()
+        {
+            return _mapList;
         }
     }
 }

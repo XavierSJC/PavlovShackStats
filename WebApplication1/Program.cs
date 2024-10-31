@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using PavlovShackStats.Data;
 using WebApplication1.Services;
 
@@ -12,10 +13,16 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 builder.Services.AddTransient<IPavlovShackStatsService, PavlovShackStatsService>();
+
+var modIoApiPath = builder.Configuration.GetSection("Mod.io").GetValue<string>("ApiPath");
+var modIoApiKey = builder.Configuration.GetSection("Mod.io").GetValue<string>("ApiKey");
+builder.Services.AddSingleton<IModIoService>(modIoService => new ModIoService(modIoApiPath, modIoApiKey));
+
 var rconIpAddress = builder.Configuration.GetSection("RconSettings").GetValue<string>("ipAddress");
 var rconPort = builder.Configuration.GetSection("RconSettings").GetValue<int>("port");
 var rconPassword = builder.Configuration.GetSection("RconSettings").GetValue<string>("password");
-builder.Services.AddSingleton<IGameStatusService>(serverStatusService => new GameStatusService(rconIpAddress, rconPort, rconPassword));
+builder.Services.AddSingleton<IGameStatusService>(x => 
+    new GameStatusService(x.GetRequiredService<IModIoService>(), rconIpAddress, rconPort, rconPassword));
 
 builder.Services.AddCors(opt =>
 {
