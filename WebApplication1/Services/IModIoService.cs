@@ -5,5 +5,6 @@ namespace WebApplication1.Services
     public interface IModIoService
     {
         Mod GetModDetailsByResourceId(int resourceId);
+        bool IsServiceConfigured();
     }
 }

@@ -130,7 +130,7 @@ namespace WebApplication1.Services
                     _mapList.Clear();
                     foreach (var map in mapListReply.MapList)
                     {
-                        if (map.MapId.ToLower().StartsWith("ugc"))
+                        if (map.MapId.ToLower().StartsWith("ugc") && _modIoService.IsServiceConfigured())
                         {
                             Mod mapInfo = _modIoService.GetModDetailsByResourceId(int.Parse(map.MapId.Substring(3)));
                             _mapList.Add(new

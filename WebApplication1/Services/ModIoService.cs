@@ -27,5 +27,25 @@ namespace WebApplication1.Services
 
             return JsonSerializer.Deserialize<Mod>(json);
         }
+
+        public bool IsServiceConfigured()
+        {
+            string url = $"{_apiPath}/v1/games/{gamePavlovId}/mods?_limit=1&api_key={_apiKey}";
+            string json;
+
+            try
+            {
+                using (HttpClient client = new())
+                {
+                    json = client.GetStringAsync(url).Result;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
