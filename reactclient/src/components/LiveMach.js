@@ -45,7 +45,7 @@ export default class LiveMatch extends Component {
             <TableCell style={{ textAlign: 'right' }}>Mapa: {matchDetails.mapName}</TableCell>
             <TableCell/>
             <TableCell/>
-            <TableCell/>
+            <TableCell style={{ textAlign: 'center' }}>Modo de jogo: {matchDetails.gameModeName}</TableCell>
             <TableCell/>
             <TableCell/>
             <TableCell style={{ textAlign: 'left' }}>Jogadores: {matchDetails.playerCount}</TableCell>
@@ -108,7 +108,7 @@ export default class LiveMatch extends Component {
     let matchDetailsTable = LiveMatch.renderMatchDetails(this.state.matchDetails);
     return (
       <div>
-        <Typography paragraph>O servidor atualmente está LIGADO, acompanhe a partida abaixo</Typography>
+        <Typography paragraph>O servidor atualmente está LIGADO, acompanhe a partida abaixo:</Typography>
         {matchDetailsTable}
       </div>
     );
