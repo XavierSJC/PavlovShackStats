@@ -99,6 +99,14 @@ export default class PlayerStatsTable extends Component {
       searchParams.append("untilDate", this.props.until);
     if (this.props.gameMode)
       searchParams.append("gameMode", this.props.gameMode);
+    if (this.props.daysOfWeek)
+    {
+      let dw = new String(this.props.daysOfWeek)
+      let arr_dw = dw.split(',')
+      arr_dw.forEach(dw => {
+        searchParams.append('daysOfWeek', dw);
+      });
+    }
 
     await fetch(Constants.API_URL_GET_PLAYERS_STATS.concat('?', searchParams.toString()))
       .then((response) => {

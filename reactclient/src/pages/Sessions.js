@@ -17,13 +17,13 @@ export default class Sessions extends Component {
           Temporadas
         </Typography>
         <Typography>
-          Para as temporadas é contabilizado apenas os mapas do modo SND (Armar/Desarmar bombas)
+          Para as temporadas é contabilizado apenas os mapas do modo SND (Armar/Desarmar bombas) nas Terças e Quintas feiras
         </Typography>
         <br/>
         <Typography variant='h4'>
           Temporada {this.props.title} (desde {this.props.since} até {this.props.until}):
         </Typography>
-        <PlayerStatsTable since={this.props.since} until={this.props.until} gameMode='SND'/>
+        <PlayerStatsTable since={this.props.since} until={this.props.until} gameMode='SND' daysOfWeek='2,5'/>
         <br/><br/><br/>
         <Typography variant='h4'>
           Temporadas anteriores:
@@ -37,29 +37,12 @@ export default class Sessions extends Component {
             }
           }}>
             <ListItem>
-            <ListItemButton component="a" href="/session0">
-                <ListItemText primary="Temporada 0" />
-              </ListItemButton>
-              <ListItemButton component="a" href="/session1">
-                <ListItemText primary="Temporada 1" />
-              </ListItemButton>
-              <ListItemButton component="a" href="/session2">
-                <ListItemText primary="Temporada 2" />
-              </ListItemButton>
-              <ListItemButton component="a" href="/session3">
-                <ListItemText primary="Temporada 3" />
-              </ListItemButton>
               <ListItemButton component="a" href="/session4">
                 <ListItemText primary="Temporada 4" />
               </ListItemButton>
             </ListItem>
           </List>
         </Typography>
-        <br/><br/><br/>
-        <Typography>
-          Caso queira ver a estatistica de todas as temporadas somadas <a href='/playerstats'>consulte aqui!</a>.
-        </Typography>
-        <br/><br/><br/>
       </Box>
     );
   }

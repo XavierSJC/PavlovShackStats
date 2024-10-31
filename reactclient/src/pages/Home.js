@@ -7,15 +7,15 @@ export default function Home() {
   return (
     <Box>
       <Typography variant='h3'>
-        Bem-vindo a página do servidor [ CPX BRASIL ] - Pavlov 24Hras
+        Bem-vindo a página do servidor BRASIL PAVLOV 24H
         <br />
       </Typography>
         <Typography paragraph></Typography>
         <Typography paragraph>
-          Olá, jogou recentemente do servidor [ CPX BRASIL ] - Pavlov 24Hras?
+          Olá, jogou recentemente do servidor BRASIL PAVLOV 24H?
         </Typography>
         <Typography paragraph>
-          Veja aqui quem está online e o atual mapa em execução.
+          Veja aqui seu ranking, quem está online, os maps disponíveis e o modo de jogo atual.
         </Typography>
 
       <LiveMatch />
