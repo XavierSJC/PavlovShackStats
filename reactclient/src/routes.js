@@ -25,13 +25,13 @@ const AppRoutes = [
   },
   {
     path: '/sessions',
-    element: <Sessions title='atual' since='2022-10-01' until='2024-12-31' />,
+    element: <Sessions title='atual' since='2024-10-01' until='2024-12-31' />,
     title: 'Temporadas',
     HiddenInHeader: false
   },
   {
     path: '/session4',
-    element: <Sessions title='0' since='2024-10-01' until='2024-12-31' />,
+    element: <Sessions title='4' since='2024-10-01' until='2024-12-31' />,
     title: 'Temporada 1/4',
     HiddenInHeader: true
   }
