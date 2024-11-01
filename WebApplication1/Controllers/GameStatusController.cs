@@ -7,10 +7,12 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class GameStatusController : ControllerBase
     {
+        private readonly ILogger _logger;
         private readonly IGameStatusService _GameStatusService;
 
-        public GameStatusController(IGameStatusService gameStatus)
+        public GameStatusController(ILogger<GameStatusController> logger, IGameStatusService gameStatus)
         {
+            _logger = logger;
             _GameStatusService = gameStatus;
         }
 
@@ -23,6 +25,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogWarning("Failed to fetch IsOnline information: {errorMessage}", ex.Message);
                 return NotFound(ex.Message);
             }            
         }
@@ -36,6 +39,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogWarning("Failed to fetch ServerInfo information: {errorMessage}", ex.Message);
                 return NotFound(ex.Message);
             }
         }
@@ -49,6 +53,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogWarning("Failed to fetch MapList information: {errorMessage}", ex.Message);
                 return NotFound(ex.Message);
             }
         }
