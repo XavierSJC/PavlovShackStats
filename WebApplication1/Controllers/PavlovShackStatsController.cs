@@ -8,10 +8,12 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class PavlovShackStatsController : ControllerBase
     {
+        private readonly ILogger<PavlovShackStatsController> _logger;
         private readonly IPavlovShackStatsService _PavlovShackStats;
 
-        public PavlovShackStatsController(IPavlovShackStatsService pavlovShackStats)
+        public PavlovShackStatsController(ILogger<PavlovShackStatsController> logger, IPavlovShackStatsService pavlovShackStats)
         {
+            _logger = logger;
             _PavlovShackStats = pavlovShackStats;
         }
 
@@ -20,10 +22,14 @@ namespace WebApplication1.Controllers
         {
             try
             {
+                _logger.LogInformation("Receiving new match info from {sourceIp}.", Request.HttpContext.Connection.RemoteIpAddress);
                 _PavlovShackStats.InsertNewStats(pavlovStats, filename);
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error to process new match info from {sourceIp}: {exceptionMessage}", 
+                    Request.HttpContext.Connection.RemoteIpAddress,
+                    ex.Message);
                 return BadRequest(ex.Message);
             }
 
@@ -57,6 +63,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error while returning Player Stats: {exceptionMessage}", ex.Message);
                 return NotFound(ex.Message);
             }
         }
@@ -79,6 +86,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error while returning Player Stats: {exceptionMessage}", ex.Message);
                 return NotFound(ex.Message);
             }
 
@@ -94,6 +102,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error while returning Players: {exceptionMessage}", ex.Message);
                 return NotFound(ex.Message);
             }
         }
@@ -115,6 +124,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error while returning player matches: {exceptionMessage}", ex.Message);
                 return NotFound(ex.Message);
             }
 
@@ -137,6 +147,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error while returning matches: {exceptionMessage}", ex.Message);
                 return NotFound(ex.Message);
             }
         }
@@ -158,6 +169,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error while returning match: {exceptionMessage}", ex.Message);
                 return NotFound(ex.Message);
             }
 
@@ -173,6 +185,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error while returning teams match: {exceptionMessage}", ex.Message);
                 return NotFound(ex.Message);
             }
         }
@@ -186,6 +199,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Error while returning game mode list: {exceptionMessage}", ex.Message);
                 return NotFound(ex.Message);
             }
         }
