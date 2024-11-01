@@ -30,6 +30,11 @@ namespace WebApplication1.Services
 
         public bool IsServiceConfigured()
         {
+            if (string.IsNullOrEmpty(_apiKey) || string.IsNullOrEmpty(_apiPath))
+            {
+                return false;
+            }
+
             string url = $"{_apiPath}/v1/games/{gamePavlovId}/mods?_limit=1&api_key={_apiKey}";
             string json;
 

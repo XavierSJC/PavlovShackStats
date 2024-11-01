@@ -128,9 +128,10 @@ namespace WebApplication1.Services
                 {
                     var mapListReply = await new MapListCommand().ExecuteCommand(_Rcon);
                     _mapList.Clear();
+                    bool usingModIo = _modIoService.IsServiceConfigured();
                     foreach (var map in mapListReply.MapList)
                     {
-                        if (map.MapId.ToLower().StartsWith("ugc") && _modIoService.IsServiceConfigured())
+                        if (map.MapId.ToLower().StartsWith("ugc") && usingModIo)
                         {
                             Mod mapInfo = _modIoService.GetModDetailsByResourceId(int.Parse(map.MapId.Substring(3)));
                             _mapList.Add(new
