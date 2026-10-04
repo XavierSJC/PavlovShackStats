@@ -122,39 +122,70 @@ namespace WebApplication1.Services
 
         public async Task WatchMapListInfo()
         {
+            _mapList.Add(new
+            {
+                name = map.MapId,
+                mode = map.GameMode
+            });
+        }
+
+        private void GetMapDetails(MapList[] mapList, bool isModIoAvailable)
+        {
+            foreach (var map in mapList)
+            {
+                if (map.MapId.ToLower().StartsWith("ugc") && isModIoAvailable)
+                {
+                    Mod mapInfo = _modIoService.GetModDetailsByResourceId(int.Parse(map.MapId.Substring(3)));
+                    if (mapInfo != null)
+                    {
+                        _mapList.Add(new
+                        {
+                            id = mapInfo.id,
+                            name = mapInfo.name,
+                            mode = map.GameMode,
+                            status = mapInfo.status,
+                            visible = mapInfo.visible,
+                            submitted_by = mapInfo.submitted_by,
+                            logo = mapInfo.logo,
+                            summary = mapInfo.summary,
+                            profile_url = mapInfo.profile_url,
+                            tags = mapInfo.tags
+                        });
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Mod.io service failed to fetch details of map {mapId}.", map.MapId);
+                        AddMapDetailsToList(map);
+                    }
+                }
+                else
+                {
+                    if (!isModIoAvailable) 
+                    {
+                        _logger.LogInformation("Mod.io service unvailable. Detail about the map '{mapId}' do not available", map.MapId);
+                    }
+                    AddMapDetailsToList(map);
+                }
+            }
+        }
+
+        public async Task WatchMapListInfo()
+        {
+            _logger.LogInformation("Starting monitoring map list of Pavlov Server");
             while (true)
             {
                 if (await IsConnected())
                 {
-                    var mapListReply = await new MapListCommand().ExecuteCommand(_Rcon);
-                    _mapList.Clear();
-                    foreach (var map in mapListReply.MapList)
+                    try
                     {
-                        if (map.MapId.ToLower().StartsWith("ugc") && _modIoService.IsServiceConfigured())
-                        {
-                            Mod mapInfo = _modIoService.GetModDetailsByResourceId(int.Parse(map.MapId.Substring(3)));
-                            _mapList.Add(new
-                            {
-                                id = mapInfo.id,
-                                name = mapInfo.name,
-                                mode = map.GameMode,
-                                status = mapInfo.status,
-                                visible = mapInfo.visible,
-                                submitted_by = mapInfo.submitted_by,
-                                logo = mapInfo.logo,
-                                summary = mapInfo.summary,
-                                profile_url = mapInfo.profile_url,
-                                tags = mapInfo.tags
-                            });
-                        }
-                        else
-                        {
-                            _mapList.Add(new 
-                            {
-                                name = map.MapId,
-                                mode = map.GameMode
-                            });
-                        }
+                        var mapListReply = await new MapListCommand().ExecuteCommand(_Rcon);
+                        _mapList.Clear();
+                        bool usingModIo = _modIoService.IsConfigured();
+                        GetMapDetails(mapListReply.MapList, usingModIo);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning("Exception when fetch map list details: {exceptionMessage}", ex.Message);
                     }
                 }
 

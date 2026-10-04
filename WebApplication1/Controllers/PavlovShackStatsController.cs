@@ -20,6 +20,7 @@ namespace WebApplication1.Controllers
         {
             try
             {
+                _logger.LogInformation("Receiving new match info from {sourceIp}.", Request.HttpContext.Connection.RemoteIpAddress); //Request.Headers["x-forwarded-for"]
                 _PavlovShackStats.InsertNewStats(pavlovStats, filename);
             }
             catch (Exception ex)
