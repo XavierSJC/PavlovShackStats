@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Recreate conf file
-rm -rf ./env-config.js
-touch ./env-config.js
+rm -rf ./public/env-config.js
+touch ./public/env-config.js
 
 # Add attribution
-echo "window._env_ = {" >> ./env-config.js
+echo "window._env_ = {" >> ./public/env-config.js
 
 # Read each line from .env file
 while read -r line || [[ -n "$line" ]];
@@ -22,7 +22,7 @@ do
   [[ -z $value ]] && value=${varvalue}
   
   # Link configuration property to JS file
-  echo "  $varname: \"$value\"," >> ./env-config.js
+  echo "  $varname: \"$value\"," >> ./public/env-config.js
 done < .env
 
-echo "}" >> ./env-config.js
+echo "}" >> ./public/env-config.js
