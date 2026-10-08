@@ -44,6 +44,6 @@
     ]
   },
   "overrides": {
-  "@rushstack/eslint-patch": "1.3.2"
+    "@rushstack/eslint-patch": "1.3.2"
   }
 }
