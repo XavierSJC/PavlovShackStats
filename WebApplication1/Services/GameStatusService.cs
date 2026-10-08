@@ -7,6 +7,7 @@ namespace WebApplication1.Services
 {
     public class GameStatusService : IGameStatusService
     {
+        private readonly ILogger<GameStatusService> _logger;
         private static int _updateMatchIntervalMs = 3000;
         private static int _updateMapsIntervalMs = 21600000;
         private static int _delayNextCommandIntervalMs = 333;
@@ -14,8 +15,13 @@ namespace WebApplication1.Services
         private LiveMatch _liveMatch;
         private IList<object> _mapList;
         private IModIoService _modIoService;
-        public GameStatusService(IModIoService modIoService, string gameServerAddress, int rconPort, string rconPassword)
+        public GameStatusService(ILogger<GameStatusService> logger, 
+            IModIoService modIoService, 
+            string gameServerAddress, 
+            int rconPort, 
+            string rconPassword)
         {
+            _logger = logger;
             _modIoService = modIoService;
             _Rcon = new(gameServerAddress, rconPort, rconPassword);
             _liveMatch = new LiveMatch();
@@ -26,6 +32,7 @@ namespace WebApplication1.Services
 
         private async Task WatchMatchInfo()
         {
+            _logger.LogInformation("Starting monitoring matches of Pavlov Server");
             while (true)
             {
 
@@ -41,7 +48,7 @@ namespace WebApplication1.Services
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.ToString());
+                        _logger.LogWarning("Issue to fetch match information: {errorMessage}", ex.Message);
                     }
 
                 }
@@ -63,7 +70,7 @@ namespace WebApplication1.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogError(ex, "Error occurred while connecting to game server. Please check the RCON IP/Port/Password");
                 return false;
             }
 
@@ -120,7 +127,7 @@ namespace WebApplication1.Services
             return _Rcon.Connected;
         }
 
-        public async Task WatchMapListInfo()
+        public async Task AddMapDetailsToList(MapList map)
         {
             _mapList.Add(new
             {
@@ -160,10 +167,7 @@ namespace WebApplication1.Services
                 }
                 else
                 {
-                    if (!isModIoAvailable) 
-                    {
-                        _logger.LogInformation("Mod.io service unvailable. Detail about the map '{mapId}' do not available", map.MapId);
-                    }
+                    _logger.LogInformation("Mod.io service unvailable.");
                     AddMapDetailsToList(map);
                 }
             }
@@ -185,16 +189,18 @@ namespace WebApplication1.Services
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogWarning("Exception when fetch map list details: {exceptionMessage}", ex.Message);
+                        _logger.LogWarning("Issue to fetch map list information: {errorMessage}", ex.Message);
                     }
                 }
 
                 if (_mapList.Count <= 0)
                 {
+                    _logger.LogWarning("Was not possible fetch info about maps of the server. Trying again in 11 seconds");
                     await Task.Delay(11000);
                 }
                 else
                 {
+                    _logger.LogInformation("Maps information fetched. Waiting for the next update");
                     await Task.Delay(_updateMapsIntervalMs);
                 }
             }
