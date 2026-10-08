@@ -7,6 +7,7 @@ namespace WebApplication1.Services
 {
     public class GameStatusService : IGameStatusService
     {
+        private readonly ILogger<GameStatusService> _logger;
         private static int _updateMatchIntervalMs = 3000;
         private static int _updateMapsIntervalMs = 21600000;
         private static int _delayNextCommandIntervalMs = 333;
@@ -14,8 +15,13 @@ namespace WebApplication1.Services
         private LiveMatch _liveMatch;
         private IList<object> _mapList;
         private IModIoService _modIoService;
-        public GameStatusService(IModIoService modIoService, string gameServerAddress, int rconPort, string rconPassword)
+        public GameStatusService(ILogger<GameStatusService> logger, 
+            IModIoService modIoService, 
+            string gameServerAddress, 
+            int rconPort, 
+            string rconPassword)
         {
+            _logger = logger;
             _modIoService = modIoService;
             _Rcon = new(gameServerAddress, rconPort, rconPassword);
             _liveMatch = new LiveMatch();
@@ -26,6 +32,7 @@ namespace WebApplication1.Services
 
         private async Task WatchMatchInfo()
         {
+            _logger.LogInformation("Starting monitoring matches of Pavlov Server");
             while (true)
             {
 
@@ -41,7 +48,7 @@ namespace WebApplication1.Services
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.ToString());
+                        _logger.LogWarning("Issue to fetch match information: {errorMessage}", ex.Message);
                     }
 
                 }
@@ -63,7 +70,7 @@ namespace WebApplication1.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogError(ex, "Error occurred while connecting to game server. Please check the RCON IP/Port/Password");
                 return false;
             }
 
@@ -120,50 +127,80 @@ namespace WebApplication1.Services
             return _Rcon.Connected;
         }
 
+        public async Task AddMapDetailsToList(MapList map)
+        {
+            _mapList.Add(new
+            {
+                name = map.MapId,
+                mode = map.GameMode
+            });
+        }
+
+        private void GetMapDetails(MapList[] mapList, bool isModIoAvailable)
+        {
+            foreach (var map in mapList)
+            {
+                if (map.MapId.ToLower().StartsWith("ugc") && isModIoAvailable)
+                {
+                    Mod mapInfo = _modIoService.GetModDetailsByResourceId(int.Parse(map.MapId.Substring(3)));
+                    if (mapInfo != null)
+                    {
+                        _mapList.Add(new
+                        {
+                            id = mapInfo.id,
+                            name = mapInfo.name,
+                            mode = map.GameMode,
+                            status = mapInfo.status,
+                            visible = mapInfo.visible,
+                            submitted_by = mapInfo.submitted_by,
+                            logo = mapInfo.logo,
+                            summary = mapInfo.summary,
+                            profile_url = mapInfo.profile_url,
+                            tags = mapInfo.tags
+                        });
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Mod.io service failed to fetch details of map {mapId}.", map.MapId);
+                        AddMapDetailsToList(map);
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation("Mod.io service unvailable.");
+                    AddMapDetailsToList(map);
+                }
+            }
+        }
+
         public async Task WatchMapListInfo()
         {
+            _logger.LogInformation("Starting monitoring map list of Pavlov Server");
             while (true)
             {
                 if (await IsConnected())
                 {
-                    var mapListReply = await new MapListCommand().ExecuteCommand(_Rcon);
-                    _mapList.Clear();
-                    foreach (var map in mapListReply.MapList)
+                    try
                     {
-                        if (map.MapId.ToLower().StartsWith("ugc") && _modIoService.IsServiceConfigured())
-                        {
-                            Mod mapInfo = _modIoService.GetModDetailsByResourceId(int.Parse(map.MapId.Substring(3)));
-                            _mapList.Add(new
-                            {
-                                id = mapInfo.id,
-                                name = mapInfo.name,
-                                mode = map.GameMode,
-                                status = mapInfo.status,
-                                visible = mapInfo.visible,
-                                submitted_by = mapInfo.submitted_by,
-                                logo = mapInfo.logo,
-                                summary = mapInfo.summary,
-                                profile_url = mapInfo.profile_url,
-                                tags = mapInfo.tags
-                            });
-                        }
-                        else
-                        {
-                            _mapList.Add(new 
-                            {
-                                name = map.MapId,
-                                mode = map.GameMode
-                            });
-                        }
+                        var mapListReply = await new MapListCommand().ExecuteCommand(_Rcon);
+                        _mapList.Clear();
+                        bool usingModIo = _modIoService.IsConfigured();
+                        GetMapDetails(mapListReply.MapList, usingModIo);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning("Issue to fetch map list information: {errorMessage}", ex.Message);
                     }
                 }
 
                 if (_mapList.Count <= 0)
                 {
+                    _logger.LogWarning("Was not possible fetch info about maps of the server. Trying again in 11 seconds");
                     await Task.Delay(11000);
                 }
                 else
                 {
+                    _logger.LogInformation("Maps information fetched. Waiting for the next update");
                     await Task.Delay(_updateMapsIntervalMs);
                 }
             }

@@ -10,6 +10,9 @@ This API can access the the RCON of the server to provide updated status of the 
 This API can access the mod.io API to provides informations about the rotation map of the server, mandatory 
 
 ## Docker Image
+### Volumes
+All logs are stored at `/app/logs/`.
+
 ### Environment Variables
 #### Database Connection
 This information is necessary if you wish build a database with the matches played in you server.

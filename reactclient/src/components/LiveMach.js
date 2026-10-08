@@ -26,6 +26,7 @@ export default class LiveMatch extends Component {
     super(props);
     this.state = { 
         serverOnline: false,
+        isServerPavlovOnline: false,
         matchDetails: [], 
         loading: true
     };
@@ -122,11 +123,11 @@ export default class LiveMatch extends Component {
         }
       })
       .then ((json) => {
-        this.state.isServerPavlovOnline = json;
+        this.setState({ isServerPavlovOnline: json });
       })
       .catch((error) => {
         console.log("Error to fetch API server '", Constants.API_URL_GET_STATUS_PAVLOV_SERVER, "': ", error);
-        this.state.isServerPavlovOnline = false;
+        this.setState({ isServerPavlovOnline: false });
       });
 
     if (this.state.isServerPavlovOnline !== true)

@@ -8,10 +8,12 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class PavlovShackStatsController : ControllerBase
     {
+        private readonly ILogger _logger;
         private readonly IPavlovShackStatsService _PavlovShackStats;
 
-        public PavlovShackStatsController(IPavlovShackStatsService pavlovShackStats)
+        public PavlovShackStatsController(ILogger<GameStatusController> logger, IPavlovShackStatsService pavlovShackStats)
         {
+            _logger = logger;
             _PavlovShackStats = pavlovShackStats;
         }
 
@@ -20,6 +22,7 @@ namespace WebApplication1.Controllers
         {
             try
             {
+                _logger.LogInformation("Receiving new match info from {sourceIp}.", Request.HttpContext.Connection.RemoteIpAddress); //Request.Headers["x-forwarded-for"]
                 _PavlovShackStats.InsertNewStats(pavlovStats, filename);
             }
             catch (Exception ex)
